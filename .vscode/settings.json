@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "__locale": "cpp",
+        "bitset": "cpp",
+        "optional": "cpp",
+        "memory": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "system_error": "cpp",
+        "thread": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "vector": "cpp"
+    }
+}

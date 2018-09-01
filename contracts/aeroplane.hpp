@@ -24,65 +24,39 @@ using eosio::contract;
 using eosio::permission_level;
 using eosio::action;
 
-class happyeosslot : public tradeableToken {
+class aeroplane : public tradeableToken {
     public:
-        happyeosslot(account_name self) :
-        tradeableToken(self),
+        aeroplane(account_name self) :
         offers(_self, _self) {}
 
-        void init(const checksum256& hash);
-        // For test only.
-        void test(const account_name account, asset eos);
-        
-        // EOS transfer event.
-        void onTransfer(account_name from,
-                        account_name to,
-                        asset        quantity,
-                        string       memo);
-
-        void transfer( account_name from,
-                       account_name to,
-                       asset        quantity,
-                       string       memo );                        
-
-        void reveal( const checksum256 &seed, const checksum256 &hash);
-//        real_type price() const{
-//            return raw_price() * eop();
-//        }
-
-//        void apply(account_name contract, account_name act);
-
-//        uint64_t get_roll_result(const account_name& account) const;
+        void newgame(const checksum256& hash);
+        void random6(const checksum256& hash);
+        void step(const string player);
+        void endgame(const string player) ;
 
     private:
         // @abi table offer i64
-        struct offer {
-            uint64_t id;
-            account_name owner;
-            uint64_t bet;
+        struct player {
+            uint64_t playerid;
+            account_name name;
             checksum256 seed;
 
-            uint64_t primary_key() const { return id; }
-            EOSLIB_SERIALIZE(offer, (id)(owner)(bet)(seed))
+            uint64_t primary_key() const { return playerid; }
+            EOSLIB_SERIALIZE(player, (playerid)(name)(seed))
         };
-        typedef eosio::multi_index<N(offer), offer> offer_index;
-        offer_index offers;
+        typedef eosio::multi_index<N(player), player> player_index;
+        player_index players;
 
         // @abi table result i64
-        struct result {
-            uint64_t id;
-            uint64_t roll_number;
-            uint64_t primary_key() const { return id; }
-            EOSLIB_SERIALIZE(result, (id)(roll_number))
+        struct round {
+            uint64_t roundid;
+            uint64_t[] players;
+            uint64_t[] poses;
+            uint64_t[] step_index;
+            bool is_end;
+            uint64_t primary_key() const { return roundid; }
+            EOSLIB_SERIALIZE(round, (roundid)(players)(poses)(step_index)(is_end))
         };
-        typedef eosio::multi_index<N(result), result> results;
-
-        void bet(const account_name account, asset eos, const checksum256& seed);
-        void deal_with(eosio::multi_index< N(offer), offer>::const_iterator itr, const checksum256& seed);
-        void set_roll_result(const account_name& account, uint64_t roll_number);
-
-        uint64_t get_bonus(uint64_t seed) const;
-        uint64_t merge_seed(const checksum256& s1, const checksum256& s2) const;
-        checksum256 parse_memo(const std::string &memo) const;
+        typedef eosio::multi_index<N(round), round> rounds;
 
 };
