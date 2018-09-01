@@ -1,28 +1,42 @@
 #include <eosiolib/crypto.h>
-#include ".hpp"
+#include "aeroplane.hpp"
 
 #include <cstdio>
 
  // @abi action
-void happyeosslot::newgame(const checksum256 &hash) {
+void aeroplane::newgame(const uint64_t roundid, const uint64_t[] players) {
 
 }
 
  // @abi action
-void happyeosslot::random6(const checksum256 &hash) {
+void aeroplane::prepare(const uint64_t roundid) {
     
 }
 
  // @abi action
-void happyeosslot::step(const string player) {
+void aeroplane::step(const uint64_t roundid, const uint64_t step_index, const string player) {
     
 }
 
  // @abi action
-void happyeosslot::endgame(const string player) {
+void aeroplane::endgame(const uint64_t roundid, const uint64_t[] winners) {
     
 }
 
+ // @abi action
+void aeroplane::refreshround(const uint64_t roundid){
+
+}
+
+ // @abi action
+void aeroplane::random6(const checksum256& hash){
+
+}
+
+ // @abi action
+void aeroplane::startgame(const uint64_t roundid){
+
+}
 
 #define MY_EOSIO_ABI(TYPE, MEMBERS)                                                                                  \
     extern "C"                                                                                                       \
@@ -48,7 +62,7 @@ void happyeosslot::endgame(const string player) {
         }                                                                                                            \
     }
 // generate .wasm and .wast file
-MY_EOSIO_ABI(happyeosslot, (onTransfer)(transfer)(init)(sell)(reveal)(test))
+MY_EOSIO_ABI(aeroplane, (newgame)(prepare)(step)(endgame)(refresh))
 
 // generate .abi file
 // EOSIO_ABI(happyeosslot, (transfer)(init)(sell)(reveal)(test))

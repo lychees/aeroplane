@@ -1,5 +1,5 @@
 /**
- *  @dev minakokojima
+ *  @dev deaso
  *  @copyright Andoromeda
  */
 #pragma once
@@ -9,10 +9,6 @@
 //#include "../eosio.token/eosio.token.hpp"
 #include <cmath>
 #include <string>
-
-#define EOS_SYMBOL S(4, EOS)
-#define HPY_SYMBOL S(4, HPY)
-#define TOKEN_CONTRACT N(eosio.token)
 
 typedef double real_type;
 
@@ -27,15 +23,18 @@ using eosio::action;
 class aeroplane : public tradeableToken {
     public:
         aeroplane(account_name self) :
-        offers(_self, _self) {}
 
-        void newgame(const checksum256& hash);
-        void random6(const checksum256& hash);
-        void step(const string player);
-        void endgame(const string player) ;
+        void newgame(const uint64_t roundid, const uint64_t[] players);
+        void prepare(const uint64_t roundid);
+        void step(const uint64_t roundid, const uint64_t step_index, const string player);
+        void endgame(const uint64_t roundid, const uint64_t[] winners);
+        void refreshround(const uint64_t roundid);
 
     private:
-        // @abi table offer i64
+
+        void random6(const checksum256& hash);
+        void startgame(const uint64_t roundid);
+
         struct player {
             uint64_t playerid;
             account_name name;
@@ -47,15 +46,15 @@ class aeroplane : public tradeableToken {
         typedef eosio::multi_index<N(player), player> player_index;
         player_index players;
 
-        // @abi table result i64
         struct round {
             uint64_t roundid;
             uint64_t[] players;
             uint64_t[] poses;
-            uint64_t[] step_index;
+            uint64_t step_index;
+            uint64_t[] winners;
             bool is_end;
             uint64_t primary_key() const { return roundid; }
-            EOSLIB_SERIALIZE(round, (roundid)(players)(poses)(step_index)(is_end))
+            EOSLIB_SERIALIZE(round, (roundid)(players)(poses)(step_index)(winners)(is_end))
         };
         typedef eosio::multi_index<N(round), round> rounds;
 
